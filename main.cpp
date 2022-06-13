@@ -195,7 +195,7 @@ int main() {
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	FT_Face face;
-	if (FT_New_Face(ft, "fonts/ff.otf", 0, &face))
+	if (FT_New_Face(ft, "fonts/starwarsdemolitionlevel.otf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as
