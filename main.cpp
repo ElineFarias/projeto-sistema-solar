@@ -1,18 +1,15 @@
+//Inclusão de Bibliotecas
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <stb_image.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H   
-
 #include "Shader.h"
 #include "Sphere.h"
 #include "Camera.h"
-
 #include <cstdlib>
 #include <iostream>
 #include <vector>
@@ -23,7 +20,6 @@
 #include <string>
 #define _USE_MATH_DEFINES
 #include <math.h>
-
 #define TAU (M_PI * 2.0)
 
 
@@ -33,21 +29,19 @@ void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale
 unsigned int loadTexture(char const * path);
 unsigned int loadCubemap(std::vector<std::string> faces);
 void ShowInfo(Shader &s);
-void GetDesktopResolution(float& horizontal, float& vertical)
-{
-	RECT desktop;
-	// Get a handle to the desktop window
-	const HWND hDesktop = GetDesktopWindow();
-	// Get the size of screen to the variable desktop
-	GetWindowRect(hDesktop, &desktop);
-	// The top left corner will have coordinates (0,0)
-	// and the bottom right corner will have coordinates
-	// (horizontal, vertical)
-	horizontal = desktop.right;
-	vertical = desktop.bottom;
-	
-}
+void GetDesktopResolution(float& horizontal, float& vertical) {
 
+		RECT desktop;
+		// Get a handle to the desktop window
+		const HWND hDesktop = GetDesktopWindow();
+		// Get the size of screen to the variable desktop
+		GetWindowRect(hDesktop, &desktop);
+		// The top left corner will have coordinates (0,0)
+		// and the bottom right corner will have coordinates
+		// (horizontal, vertical)
+		horizontal = desktop.right;
+		vertical = desktop.bottom;	
+}
 
 GLfloat deltaTime = 0.0f;	
 GLfloat lastFrame = 0.0f;
@@ -68,86 +62,75 @@ bool keys[1024];
 GLfloat SceneRotateY = 0.0f;
 GLfloat SceneRotateX = 0.0f;
 bool onPlanet = false;
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+				glfwSetWindowShouldClose(window, GL_TRUE);
 
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-	{
-		//camera.Position = PlanetPos;
-		onPlanet = true;
-	}
-
-	if (key >= 0 && key < 1024)
-	{
-		if (action == GLFW_PRESS)
-			keys[key] = true;
-		else if (action == GLFW_RELEASE)
-			keys[key] = false;
-	}
+			if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+					//camera.Position = PlanetPos;
+					onPlanet = true;
+			}
+			if (key >= 0 && key < 1024) {
+					if (action == GLFW_PRESS)
+						keys[key] = true;
+					else if (action == GLFW_RELEASE)
+						keys[key] = false;
+			}
 }
 
 bool firstMouse = true;
 GLfloat xoff = 0.0f, yoff = 0.0f;
 
 struct Character {
-	GLuint TextureID;   // ID handle of the glyph texture
-	glm::ivec2 Size;    // Size of glyph
-	glm::ivec2 Bearing;  // Offset from baseline to left/top of glyph
-	GLuint Advance;    // Horizontal offset to advance to next glyph
+		GLuint TextureID;   // ID handle of the glyph texture
+		glm::ivec2 Size;    // Size of glyph
+		glm::ivec2 Bearing;  // Offset from baseline to left/top of glyph
+		GLuint Advance;    // Horizontal offset to advance to next glyph
 };
 std::map<GLchar, Character> Characters;
 GLuint textVAO, textVBO;
 
 struct PlanetInfo {
-	std::string Name;
-	std::string OrbitSpeed;
-	std::string Mass;
-	std::string Gravity;
+		std::string Name;
+		std::string OrbitSpeed;
+		std::string Mass;
+		std::string Gravity;
 };
 PlanetInfo Info;
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (firstMouse)
-	{
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+			if (firstMouse) {
+					lastX = (GLfloat)xpos;
+					lastY = (GLfloat)ypos;
+					firstMouse = false;
+			}
+
+		GLfloat xoffset = (GLfloat)(xpos - lastX);
+		GLfloat yoffset = (GLfloat)(lastY - ypos);
+		xoff = xoffset;
+		yoff = yoff;
+
 		lastX = (GLfloat)xpos;
 		lastY = (GLfloat)ypos;
-		firstMouse = false;
-	}
-
-	GLfloat xoffset = (GLfloat)(xpos - lastX);
-	GLfloat yoffset = (GLfloat)(lastY - ypos);
-	xoff = xoffset;
-	yoff = yoff;
-
-	lastX = (GLfloat)xpos;
-	lastY = (GLfloat)ypos;
-	if (onRotate)
-	{
-		SceneRotateY += yoffset * 0.1f;
-		SceneRotateX += xoffset * 0.1f;
-	}
-	camera.ProcessMouseMovement(xoffset, yoffset);
+		if (onRotate) {
+				SceneRotateY += yoffset * 0.1f;
+				SceneRotateX += xoffset * 0.1f;
+		}
+		camera.ProcessMouseMovement(xoffset, yoffset);
 }
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	if (yoffset == 1)
-		camera.ProcessKeyboard(SCROLL_FORWARD, deltaTime);
-	else
-	{
-		camera.ProcessKeyboard(SCROLL_BACKWARD, deltaTime);
-	}
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+		if (yoffset == 1)
+				camera.ProcessKeyboard(SCROLL_FORWARD, deltaTime);
+		else {
+				camera.ProcessKeyboard(SCROLL_BACKWARD, deltaTime);
+		}
 }
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-	if (onFreeCam && !camera.FreeCam)
-	{
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-			onRotate = true;
-		else onRotate = false;
-	}
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+		if (onFreeCam && !camera.FreeCam) {
+			if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+				onRotate = true;
+			else onRotate = false;
+		}
 }
 
 int main() {
@@ -164,11 +147,10 @@ int main() {
 
 	/* GLFW WINDOW CREATION */
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
+	if (window == NULL) {
+			std::cout << "Failed to create GLFW window" << std::endl;
+			glfwTerminate();
+			return -1;
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -180,10 +162,9 @@ int main() {
 
 
 	/* LOAD GLAD */
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+			std::cout << "Failed to initialize GLAD" << std::endl;
+			return -1;
 	}
 	/* LOAD GLAD */
 
@@ -204,13 +185,11 @@ int main() {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	// Load first 128 characters of ASCII set
-	for (GLubyte c = 0; c < 128; c++)
-	{
-		// Load character glyph 
-		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-		{
-			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-			continue;
+	for (GLubyte c = 0; c < 128; c++) {
+			// Load character glyph 
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+				continue;
 		}
 		// Generate texture
 		GLuint texture;
@@ -369,15 +348,13 @@ int main() {
 	GLfloat xx;
 	GLfloat zz;
 	float angl;
-	for (int i = 0; i < 2000; i++)
-	{
-		angl = (float)(M_PI / 2 - i * (M_PI / 1000));
-		xx = sin(angl) * 100.0f;
-		zz = cos(angl) * 100.0f;
-		orbVert.push_back(xx);
-		orbVert.push_back(0.0f);
-		orbVert.push_back(zz);
-
+	for (int i = 0; i < 2000; i++) {
+			angl = (float)(M_PI / 2 - i * (M_PI / 1000));
+			xx = sin(angl) * 100.0f;
+			zz = cos(angl) * 100.0f;
+			orbVert.push_back(xx);
+			orbVert.push_back(0.0f);
+			orbVert.push_back(zz);
 	}
 	/* VERTEX GENERATION FOR ORBITS */
 
@@ -407,22 +384,22 @@ int main() {
 	/* TEXT RENDERING VAO-VBO*/
 
 	/* LOAD TEXTURES */
-	unsigned int texture_earth = loadTexture("resources/texturaPlanetas/terra.jpg");
-	unsigned int t_sun = loadTexture("resources/texturaPlanetas/sol.jpg");
-	unsigned int texture_moon = loadTexture("resources/texturaPlanetas/lua.jpg");
-	unsigned int texture_mercury = loadTexture("resources/texturaPlanetas/mercurio.jpg");
-	unsigned int texture_venus = loadTexture("resources/texturaPlanetas/venus.jpg");
-	unsigned int texture_mars = loadTexture("resources/texturaPlanetas/marte.jpg");
-	unsigned int texture_jupiter = loadTexture("resources/texturaPlanetas/jupiter.jpg");
-	unsigned int texture_saturn = loadTexture("resources/texturaPlanetas/saturno.jpg");
-	unsigned int texture_uranus = loadTexture("resources/texturaPlanetas/urano.jpg");
-	unsigned int texture_neptune = loadTexture("resources/texturaPlanetas/netuno.jpg");
-	unsigned int texture_saturn_ring = loadTexture("resources/texturaPlanetas/anelSaturno.jpg");
-	unsigned int texture_earth_clouds = loadTexture("resources/texturaPlanetas/nuvensTerra.jpg");
+	unsigned int texturaTerra = loadTexture("resources/texturaPlanetas/terra.jpg");
+	unsigned int texturaSol = loadTexture("resources/texturaPlanetas/sol.jpg");
+	unsigned int texturaLua = loadTexture("resources/texturaPlanetas/lua.jpg");
+	unsigned int texturaMercurio = loadTexture("resources/texturaPlanetas/mercurio.jpg");
+	unsigned int texturaVenus = loadTexture("resources/texturaPlanetas/venus.jpg");
+	unsigned int texturaMarte = loadTexture("resources/texturaPlanetas/marte.jpg");
+	unsigned int texturaJupiter = loadTexture("resources/texturaPlanetas/jupiter.jpg");
+	unsigned int texturaSaturno = loadTexture("resources/texturaPlanetas/saturno.jpg");
+	unsigned int texturaUrano = loadTexture("resources/texturaPlanetas/urano.jpg");
+	unsigned int texturaNetuno = loadTexture("resources/texturaPlanetas/netuno.jpg");
+	unsigned int texturaSaturnoAnel = loadTexture("resources/texturaPlanetas/anelSaturno.jpg");
+	unsigned int texturaTerra_clouds = loadTexture("resources/texturaPlanetas/nuvensTerra.jpg");
 	/* LOAD TEXTURES */
 
 	/* SPHERE GENERATION */
-	Sphere Sun(100.0f, 36 * 5, 18 * 5);
+	Sphere Sol(100.0f, 36 * 5, 18 * 5);
 	Sphere Mercury(10.0f, 36, 18);
 	Sphere Venus(12.0f, 36, 18);
 	Sphere Earth(11.8f, 36, 18);
@@ -434,8 +411,7 @@ int main() {
 	Sphere Moon(5.5f, 36, 18);
 	/* SPHERE GENERATION */
 
-	std::vector<std::string> faces
-	{
+	std::vector<std::string> faces {
 		"resources/skybox/starfield/starfield_rt.tga",
 		"resources/skybox/starfield/starfield_lf.tga",
 		"resources/skybox/starfield/starfield_up.tga",
@@ -443,14 +419,14 @@ int main() {
 		"resources/skybox/starfield/starfield_ft.tga",
 		"resources/skybox/starfield/starfield_bk.tga",
 	};
-	std::vector<std::string> faces_extra
-	{
-		"resources/skybox/blue/bkg1_right.png",
+	std::vector<std::string> faces_extra {
+		 "resources/skybox/blue/bkg1_right.png",
 		"resources/skybox/blue/bkg1_left.png",
-		"resources/skybox/blue/bkg1_top.png",
-		"resources/skybox/blue/bkg1_bot.png",
-		"resources/skybox/blue/bkg1_front.png",
-		"resources/skybox/blue/bkg1_back.png",
+		"resources/skybox/blue/bkg1_top.bmp",
+		"resources/skybox/blue/bkg1_bot.jpg",
+		"resources/skybox/blue/bkg1_front.bmp",
+		"resources/skybox/blue/bkg1_back.jpg",
+
 	};
 
 	unsigned int cubemapTexture = loadCubemap(faces);
@@ -466,8 +442,7 @@ int main() {
 	onFreeCam = true;
 	glm::mat4 view;
 	glm::vec3 PlanetsPositions[9];
-	while (!glfwWindowShouldClose(window))
-	{
+	while (!glfwWindowShouldClose(window)) {
 		
 		GLfloat currentFrame = (GLfloat)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -522,24 +497,24 @@ int main() {
 		SimpleShader.setMat4("projection", projection);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, t_sun);
+		glBindTexture(GL_TEXTURE_2D, texturaSol);
 
 
-		/* SUN */
-		glm::mat4 model_sun;
-		model_sun = glm::rotate(model_sun, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
-		model_sun = glm::rotate(model_sun, (GLfloat)glfwGetTime() * glm::radians(23.5f) * 0.25f, glm::vec3(0.0f, 0.0f, 1.f));
-		model_sun = glm::translate(model_sun, point);
-		SimpleShader.setMat4("model", model_sun);
-		Sun.Draw();
-		/* SUN */
+		/* SOL*/
+		glm::mat4 modelo_sol;
+		modelo_sol = glm::rotate(modelo_sol, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
+		modelo_sol = glm::rotate(modelo_sol, (GLfloat)glfwGetTime() * glm::radians(23.5f) * 0.25f, glm::vec3(0.0f, 0.0f, 1.f));
+		modelo_sol = glm::translate(modelo_sol, point);
+		SimpleShader.setMat4("model", modelo_sol);
+		Sol.Draw();
+		/* SOL */
 
-		/* MERCURY */
+		/* MERCURIO */
 		glm::mat4 model_mercury;
 		double xx = sin(glfwGetTime() * PlanetSpeed) * 100.0f *2.0f *1.3f;
 		double zz = cos(glfwGetTime() * PlanetSpeed) * 100.0f *2.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_mercury);
+		glBindTexture(GL_TEXTURE_2D, texturaMercurio);
 		model_mercury = glm::translate(model_mercury, point);
 		model_mercury = glm::rotate(model_mercury, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_mercury = glm::rotate(model_mercury, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -549,14 +524,14 @@ int main() {
 		model_mercury = glm::rotate(model_mercury, (GLfloat)glfwGetTime() * glm::radians(-90.0f) * 0.05f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_mercury);
 		Mercury.Draw();
-		/* MERCURY */
+		/* MERCURIO */
 
 		/* VENUS */
 		glm::mat4 model_venus;
 		xx = sin(glfwGetTime() * PlanetSpeed *0.75f) * 100.0f * 3.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.75f) * 100.0f * 3.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_venus);
+		glBindTexture(GL_TEXTURE_2D, texturaVenus);
 		model_venus = glm::translate(model_venus, point);
 		model_venus = glm::rotate(model_venus, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_venus = glm::rotate(model_venus, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -569,12 +544,12 @@ int main() {
 		Venus.Draw();
 		/* VENUS */
 
-		/* EARTH */
+		/* TERRA */
 		glm::mat4 model_earth;
 		xx = sin(glfwGetTime() * PlanetSpeed * 0.55f) * 100.0f * 4.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.55f) * 100.0f * 4.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_earth);
+		glBindTexture(GL_TEXTURE_2D, texturaTerra);
 		model_earth = glm::translate(model_earth, point);
 		model_earth = glm::rotate(model_earth, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_earth = glm::rotate(model_earth, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -588,14 +563,14 @@ int main() {
 		SimpleShader.setMat4("model", model_earth);
 		Earth.Draw();  
 		
-		/* EARTH */
+		/* TERRA */
 		
-		/* MOON */
+		/* LUA */
 		glm::mat4 model_moon;
 		xx = sin(glfwGetTime() * PlanetSpeed * 67.55f) * 100.0f * 0.5f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 67.55f) * 100.0f * 0.5f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_moon);
+		glBindTexture(GL_TEXTURE_2D, texturaLua);
 		model_moon = glm::rotate(model_moon, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_moon = glm::rotate(model_moon, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
 		model_moon = glm::translate(model_moon, EarthPoint);
@@ -605,15 +580,15 @@ int main() {
 		model_moon = glm::rotate(model_moon, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 3.1f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_moon);
 		Moon.Draw();
-		/* MOON */
+		/* LUA */
 
 
-		/* MARS */
+		/* MARTE */
 		glm::mat4 model_mars;
 		xx = sin(glfwGetTime() * PlanetSpeed * 0.35f) * 100.0f * 5.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.35f) * 100.0f * 5.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_mars);
+		glBindTexture(GL_TEXTURE_2D, texturaMarte);
 		model_mars = glm::translate(model_mars, point);
 		model_mars = glm::rotate(model_mars, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_mars = glm::rotate(model_mars, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -624,14 +599,14 @@ int main() {
 		model_mars = glm::rotate(model_mars, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 2.1f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_mars);
 		Mars.Draw();
-		/* MARS */
+		/* MARTE */
 
 		/* JUPITER */
 		glm::mat4 model_jupiter;
 		xx = sin(glfwGetTime() * PlanetSpeed * 0.2f) * 100.0f * 6.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.2f) * 100.0f * 6.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_jupiter);
+		glBindTexture(GL_TEXTURE_2D, texturaJupiter);
 		model_jupiter = glm::translate(model_jupiter, point);
 		model_jupiter = glm::rotate(model_jupiter, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_jupiter = glm::rotate(model_jupiter, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -644,12 +619,12 @@ int main() {
 		Jupiter.Draw();
 		/* JUPITER */
 
-		/* SATURN */
+		/* SATURNO */
 		glm::mat4 model_saturn;
 		xx = sin(glfwGetTime() * PlanetSpeed * 0.15f) * 100.0f * 7.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.15f) * 100.0f * 7.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_saturn);
+		glBindTexture(GL_TEXTURE_2D, texturaSaturno);
 		model_saturn = glm::translate(model_saturn, point);
 		model_saturn = glm::rotate(model_saturn, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_saturn = glm::rotate(model_saturn, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -661,14 +636,14 @@ int main() {
 		model_saturn = glm::rotate(model_saturn, (GLfloat)glfwGetTime() * glm::radians(-34.7f) * 4.48f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_saturn);
 		Saturn.Draw();
-		/* SATURN */
+		/* SATURNO */
 
-		/* URANUS */
+		/* URANO */
 		glm::mat4 model_uranus;
 		xx = sin(glfwGetTime() * PlanetSpeed * 0.1f) * 100.0f * 8.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.1f) * 100.0f * 8.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_uranus);
+		glBindTexture(GL_TEXTURE_2D, texturaUrano);
 		model_uranus = glm::translate(model_uranus, point);
 		model_uranus = glm::rotate(model_uranus, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_uranus = glm::rotate(model_uranus, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -679,14 +654,14 @@ int main() {
 		model_uranus = glm::rotate(model_uranus, (GLfloat)glfwGetTime() * glm::radians(-99.0f) * 4.5f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_uranus);
 		Uranus.Draw();
-		/* URANUS */
+		/* URANO */
 
-		/* NEPTUNE */
+		/* NETUNO*/
 		glm::mat4 model_neptune;
 		xx = sin(glfwGetTime() * PlanetSpeed * 0.08f) * 100.0f * 9.0f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 0.08f) * 100.0f * 9.0f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_neptune);
+		glBindTexture(GL_TEXTURE_2D, texturaNetuno);
 
 		model_neptune = glm::translate(model_neptune, point);
 		model_neptune = glm::rotate(model_neptune, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -699,17 +674,16 @@ int main() {
 		
 		SimpleShader.setMat4("model", model_neptune);
 		Neptune.Draw();
-		/* NEPTUNE */
+		/* NETUNO */
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_venus);
+		glBindTexture(GL_TEXTURE_2D, texturaVenus);
 
-		/* ORBITS */
+		/* ORBITA */
 		glBindVertexArray(VAO_t);
 		glLineWidth(1.0f);
 		glm::mat4 modelorb;
-		for (float i = 2; i < 10; i++)
-		{
+		for (float i = 2; i < 10; i++) {
 			modelorb = glm::mat4(1);
 			modelorb = glm::translate(modelorb, point);
 			modelorb = glm::rotate(modelorb, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -726,15 +700,14 @@ int main() {
 		modelorb = glm::scale(modelorb, glm::vec3(0.5f *1.3f , 0.5f *1.3f, 0.5f *1.3f));
 		SimpleShader.setMat4("model", modelorb);
 		glDrawArrays(GL_LINE_LOOP, 0, (GLsizei)orbVert.size() / 3);
-		/* ORBITS */
+		/* ORBITA */
 
-		/* SATURN RINGS */
+		/* ANEIS DE SATURNO */
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_saturn_ring);
+		glBindTexture(GL_TEXTURE_2D, texturaSaturnoAnel);
 		glLineWidth(2.0f);
 		GLfloat rr = 0.55f;
-		for (int i = 0; i < 25; i++)
-		{
+		for (int i = 0; i < 25; i++) {
 			modelorb = glm::mat4(1);
 			
 			modelorb = glm::rotate(modelorb, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -750,12 +723,12 @@ int main() {
 				rr += 0.01f;
 		}
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_venus);
+		glBindTexture(GL_TEXTURE_2D, texturaVenus);
 		glBindVertexArray(0);
-		/* SATURN RINGS */
+		/* ANEIS DE SATURNO */
 
 
-		/* DRAW SKYBOX */
+		/* DESENHO SKYBOX */
 		glDepthFunc(GL_LEQUAL);  
 		SkyboxShader.Use();
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
@@ -771,9 +744,9 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);  
-		/* DRAW SKYBOX */
+		/* DESENHO SKYBOX */
 
-		/* PLANET TRACKING + SHOW INFO OF PLANET */
+		/*RASTREAMENTO DO PLANETA + MOSTRAR INFORMAÇÕES DO PLANETA*/
 		switch (PlanetView)
 		{
 		case 1:
@@ -843,24 +816,24 @@ int main() {
 		case 0:
 			view = camera.GetViewMatrix();
 
-			RenderText(TextShader, "SOLAR SYSTEM ", 25.0f, SCREEN_HEIGHT - 30.0f, 0.50f, glm::vec3(0.7f, 0.7f, 0.11f));
-			RenderText(TextShader, "STARS: 1 (SUN) ", 25.0f, SCREEN_HEIGHT - 55.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-			RenderText(TextShader, "PLANETS: 8 (MAYBE 9) ", 25.0f, SCREEN_HEIGHT - 80.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-			RenderText(TextShader, "SATELLITES: 415 ", 25.0f, SCREEN_HEIGHT - 105.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-			RenderText(TextShader, "COMMETS: 3441 ", 25.0f, SCREEN_HEIGHT - 130.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+			RenderText(TextShader, "SISTEMA SOLAR", 25.0f, SCREEN_HEIGHT - 30.0f, 0.50f, glm::vec3(0.7f, 0.7f, 0.11f));
+			RenderText(TextShader, "ESTRELA: 1 (SOL) ", 25.0f, SCREEN_HEIGHT - 55.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+			RenderText(TextShader, "PLANETAS: 8 ", 25.0f, SCREEN_HEIGHT - 80.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+			RenderText(TextShader, "SATELITES NATURAIS: 428 ", 25.0f, SCREEN_HEIGHT - 105.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+			RenderText(TextShader, "COMETAS: 4584 (Em 2021) ", 25.0f, SCREEN_HEIGHT - 130.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 
 			if (camera.FreeCam)
-				RenderText(TextShader, "FREE CAM ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+				RenderText(TextShader, "CAMERA  01 ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 			if (onFreeCam)
-				RenderText(TextShader, "STATIC CAM ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+				RenderText(TextShader, "CAMERA 02 (ESTATICA) ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 			break;
 		}
 		if (PlanetView > 0)
-			RenderText(TextShader, "PLANET CAM ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-		/* PLANET TRACKING + SHOW INFO OF PLANET */
+			RenderText(TextShader, "CAMERAS PLANETAS ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+		/* RASTREAMENTO DO PLANETA + MOSTRAR INFORMAÇÕES DO PLANETA*/
 
 
-		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// glfw: troca de buffers e pesquisa de eventos de E/S (teclas pressionadas/liberadas, mouse movido etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -889,137 +862,120 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 		SkyBoxExtra = true;
 
-	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
-	{
-		PlanetView = 0;
-		onFreeCam = false;
-		camera.FreeCam = true;
+	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) {
+			PlanetView = 0;
+			onFreeCam = false;
+			camera.FreeCam = true;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		PlanetView = 0;
-		onFreeCam = true;
-		camera.FreeCam = false;
-		camera.Position = glm::vec3(0.0f, 250.0f, -450.0f);
-		camera.Yaw = 90.0f;
-		camera.Pitch = -40.0f;
-		camera.GetViewMatrix();
-		camera.ProcessMouseMovement(xoff,yoff);
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			PlanetView = 0;
+			onFreeCam = true;
+			camera.FreeCam = false;
+			camera.Position = glm::vec3(0.0f, 250.0f, -450.0f);
+			camera.Yaw = 90.0f;
+			camera.Pitch = -40.0f;
+			camera.GetViewMatrix();
+			camera.ProcessMouseMovement(xoff,yoff);
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-	{
-		PlanetView = 1;
-		Info.Name = "MERCURY";
-		Info.OrbitSpeed = "47,87";
-		Info.Mass = "0.32868";
-		Info.Gravity = "0.38";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+			PlanetView = 1;
+			Info.Name = "MERCURY";
+			Info.OrbitSpeed = "47,87";
+			Info.Mass = "0.32868";
+			Info.Gravity = "0.38";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-	{
-		PlanetView = 2;
-		Info.Name = "VENUS";
-		Info.OrbitSpeed = "35,02";
-		Info.Mass = "0.32868";
-		Info.Gravity = "0.90";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+			PlanetView = 2;
+			Info.Name = "VENUS";
+			Info.OrbitSpeed = "35,02";
+			Info.Mass = "0.32868";
+			Info.Gravity = "0.90";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-	{
-		PlanetView = 3;
-		Info.Name = "EARTH";
-		Info.OrbitSpeed = "29,76";
-		Info.Mass = "5.97600";
-		Info.Gravity = "1";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+			PlanetView = 3;
+			Info.Name = "EARTH";
+			Info.OrbitSpeed = "29,76";
+			Info.Mass = "5.97600";
+			Info.Gravity = "1";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-	{
-		PlanetView = 4;
-		Info.Name = "MARS";
-		Info.OrbitSpeed = "24,13";
-		Info.Mass = "0.63345";
-		Info.Gravity = "0.38";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+			PlanetView = 4;
+			Info.Name = "MARS";
+			Info.OrbitSpeed = "24,13";
+			Info.Mass = "0.63345";
+			Info.Gravity = "0.38";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-	{
-		PlanetView = 5;
-		Info.Name = "JUPITER";
-		Info.OrbitSpeed = "13,07";
-		Info.Mass = "1876.64328";
-		Info.Gravity = "2.55";
-		onFreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+			PlanetView = 5;
+			Info.Name = "JUPITER";
+			Info.OrbitSpeed = "13,07";
+			Info.Mass = "1876.64328";
+			Info.Gravity = "2.55";
+			onFreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-	{
-		PlanetView = 6;
-		Info.Name = "SATURN";
-		Info.OrbitSpeed = "9,67";
-		Info.Mass = "561.80376";
-		Info.Gravity = "1.12";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
+			PlanetView = 6;
+			Info.Name = "SATURN";
+			Info.OrbitSpeed = "9,67";
+			Info.Mass = "561.80376";
+			Info.Gravity = "1.12";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
-	{
-		PlanetView = 7;
-		Info.Name = "URANUS";
-		Info.OrbitSpeed = "6,84";
-		Info.Mass = "86.05440";
-		Info.Gravity = "0.97";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
+			PlanetView = 7;
+			Info.Name = "URANUS";
+			Info.OrbitSpeed = "6,84";
+			Info.Mass = "86.05440";
+			Info.Gravity = "0.97";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
-	{
-		PlanetView = 8;
-		Info.Name = "NEPTUNE";
-		Info.OrbitSpeed = "5,48";
-		Info.Mass = "101.59200";
-		Info.Gravity = "1.17";
-		onFreeCam = false;
-		camera.FreeCam = false;
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
+			PlanetView = 8;
+			Info.Name = "NEPTUNE";
+			Info.OrbitSpeed = "5,48";
+			Info.Mass = "101.59200";
+			Info.Gravity = "1.17";
+			onFreeCam = false;
+			camera.FreeCam = false;
 	}
 
 } 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-unsigned int loadCubemap(std::vector<std::string> faces)
-{
+unsigned int loadCubemap(std::vector<std::string> faces) {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
 	int width, height, nrChannels;
 
-	for (unsigned int i = 0; i < faces.size(); i++)
-	{
-		
-		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-			);
-			stbi_image_free(data);
-		}
-		else
-		{
-			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-			stbi_image_free(data);
-		}
+	for (unsigned int i = 0; i < faces.size(); i++) {
+				unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+				if (data) {
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+						0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+					);
+					stbi_image_free(data);
+			}
+			else {
+					std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+					stbi_image_free(data);
+			}
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1030,22 +986,20 @@ unsigned int loadCubemap(std::vector<std::string> faces)
 	return textureID;
 }
 
-unsigned int loadTexture(char const * path)
-{
+unsigned int loadTexture(char const * path) {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
 	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
+	if (data) {
+			GLenum format;
+			if (nrComponents == 1)
+				format = GL_RED;
+			else if (nrComponents == 3)
+				format = GL_RGB;
+			else if (nrComponents == 4)
+				format = GL_RGBA;
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -1058,16 +1012,14 @@ unsigned int loadTexture(char const * path)
 
 		stbi_image_free(data);
 	}
-	else
-	{
+	else {
 		std::cout << "Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
 	}
 
 	return textureID;
 }
-void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
-{
+void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
 	// Activate corresponding render state	
 	s.Use();
 	glUniform3f(glGetUniformLocation(s.ID, "textColor"), color.x, color.y, color.z);
@@ -1076,8 +1028,7 @@ void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale
 
 	// Iterate through all characters
 	std::string::const_iterator c;
-	for (c = text.begin(); c != text.end(); c++)
-	{
+	for (c = text.begin(); c != text.end(); c++) {
 		Character ch = Characters[*c];
 
 		GLfloat xpos = x + ch.Bearing.x * scale;
@@ -1110,8 +1061,7 @@ void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void ShowInfo(Shader &s)
-{
+void ShowInfo(Shader &s) {
 	RenderText(s, "Planet: " + Info.Name, 25.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 	RenderText(s, "Avarage Orbital Speed (km/s): " + Info.OrbitSpeed, 25.0f, SCREEN_HEIGHT - 50.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 	RenderText(s, "Mass (kg * 10^24): " + Info.Mass, 25.0f, SCREEN_HEIGHT - 70.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));

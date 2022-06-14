@@ -1,8 +1,0 @@
-﻿  main.cpp
-  The contents of <filesystem> are available only with C++17 or later.
-C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(46,22): warning C4244: '=': conversão de 'LONG' para 'float', possível perda de dados
-C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(47,20): warning C4244: '=': conversão de 'LONG' para 'float', possível perda de dados
-C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(166,54): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(166,40): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
-C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(240,24): warning C4838: a conversão de 'FT_Pos' em 'GLuint' requer uma conversão de restrição
-  DiamondEngine.vcxproj -> C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\DiamondEngine.exe
