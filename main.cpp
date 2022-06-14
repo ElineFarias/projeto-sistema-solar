@@ -1,6 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -408,18 +407,18 @@ int main() {
 	/* TEXT RENDERING VAO-VBO*/
 
 	/* LOAD TEXTURES */
-	unsigned int texture_earth = loadTexture("resources/planets/earth2k.jpg");
-	unsigned int t_sun = loadTexture("resources/planets/2k_sun.jpg");
-	unsigned int texture_moon = loadTexture("resources/planets/2k_moon.jpg");
-	unsigned int texture_mercury = loadTexture("resources/planets/2k_mercury.jpg");
-	unsigned int texture_venus = loadTexture("resources/planets/2k_mercury.jpg");
-	unsigned int texture_mars = loadTexture("resources/planets/2k_mars.jpg");
-	unsigned int texture_jupiter = loadTexture("resources/planets/2k_jupiter.jpg");
-	unsigned int texture_saturn = loadTexture("resources/planets/2k_saturn.jpg");
-	unsigned int texture_uranus = loadTexture("resources/planets/2k_uranus.jpg");
-	unsigned int texture_neptune = loadTexture("resources/planets/2k_neptune.jpg");
-	unsigned int texture_saturn_ring = loadTexture("resources/planets/r.jpg");
-	unsigned int texture_earth_clouds = loadTexture("resources/planets/2k_earth_clouds.jpg");
+	unsigned int texture_earth = loadTexture("resources/texturaPlanetas/terra.jpg");
+	unsigned int t_sun = loadTexture("resources/texturaPlanetas/sol.jpg");
+	unsigned int texture_moon = loadTexture("resources/texturaPlanetas/lua.jpg");
+	unsigned int texture_mercury = loadTexture("resources/texturaPlanetas/mercurio.jpg");
+	unsigned int texture_venus = loadTexture("resources/texturaPlanetas/venus.jpg");
+	unsigned int texture_mars = loadTexture("resources/texturaPlanetas/marte.jpg");
+	unsigned int texture_jupiter = loadTexture("resources/texturaPlanetas/jupiter.jpg");
+	unsigned int texture_saturn = loadTexture("resources/texturaPlanetas/saturno.jpg");
+	unsigned int texture_uranus = loadTexture("resources/texturaPlanetas/urano.jpg");
+	unsigned int texture_neptune = loadTexture("resources/texturaPlanetas/netuno.jpg");
+	unsigned int texture_saturn_ring = loadTexture("resources/texturaPlanetas/anelSaturno.jpg");
+	unsigned int texture_earth_clouds = loadTexture("resources/texturaPlanetas/nuvensTerra.jpg");
 	/* LOAD TEXTURES */
 
 	/* SPHERE GENERATION */

@@ -1,2 +1,0 @@
-C:\Users\eline\Desktop\OpenGL-SolarSystem-master\Debug\DiamondEngine.exe
-C:\Users\eline\Desktop\ProjetoSistemaSolar\Debug\DiamondEngine.exe
