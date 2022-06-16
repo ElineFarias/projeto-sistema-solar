@@ -32,12 +32,12 @@ void ShowInfo(Shader &s);
 void GetDesktopResolution(float& horizontal, float& vertical) {
 
 		RECT desktop;
-		// Get a handle to the desktop window
+		// Pega um handle para a janela da área de trabalho
 		const HWND hDesktop = GetDesktopWindow();
-		// Get the size of screen to the variable desktop
+	// Obtém o tamanho da tela para a área de trabalho variável
 		GetWindowRect(hDesktop, &desktop);
-		// The top left corner will have coordinates (0,0)
-		// and the bottom right corner will have coordinates
+// O canto superior esquerdo terá coordenadas (0,0)
+// E o canto inferior direito terá coordenadas
 		// (horizontal, vertical)
 		horizontal = desktop.right;
 		vertical = desktop.bottom;	
@@ -82,19 +82,21 @@ bool firstMouse = true;
 GLfloat xoff = 0.0f, yoff = 0.0f;
 
 struct Character {
-		GLuint TextureID;   // ID handle of the glyph texture
-		glm::ivec2 Size;    // Size of glyph
-		glm::ivec2 Bearing;  // Offset from baseline to left/top of glyph
-		GLuint Advance;    // Horizontal offset to advance to next glyph
+		GLuint TextureID;   // identificador de ID da textura de glyph
+		glm::ivec2 Size;    // Tamanho do glyph
+		glm::ivec2 Bearing;  // Deslocamento da linha de base para a esquerda/topo de glyph
+		GLuint Advance;    // Deslocamento horizontal para avançar para o próximo glyph
 };
 std::map<GLchar, Character> Characters;
 GLuint textVAO, textVBO;
 
 struct PlanetInfo {
-		std::string Name;
-		std::string OrbitSpeed;
-		std::string Mass;
-		std::string Gravity;
+		std::string Nome;
+		std::string  VelocidadeMediaOrbital;
+		std::string TemperaturaMedia; 
+		std::string Massa;
+		std::string Gravidade;
+		std::string QuantidadeLuas;
 };
 PlanetInfo Info;
 
@@ -134,18 +136,18 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 int main() {
-	GetDesktopResolution(SCREEN_WIDTH, SCREEN_HEIGHT); // get resolution for create window
+	GetDesktopResolution(SCREEN_WIDTH, SCREEN_HEIGHT); // obtém resolução para criar janela
 	camera.LookAtPos = point;
 
-	/* GLFW INIT */
+	/* GLFW INICIO */
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	/* GLFW INIT */
+	/* GLFW INICIO */
 
-	/* GLFW WINDOW CREATION */
+	/* GLFW CRIAÇÃO DA JANELA */
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
 	if (window == NULL) {
 			std::cout << "Failed to create GLFW window" << std::endl;
@@ -158,18 +160,18 @@ int main() {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	/* GLFW WINDOW CREATION */
+	/* GLFW CRIAÇÃO DA JANELA */
 
 
-	/* LOAD GLAD */
+	/* INICIO GLAD */
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cout << "Failed to initialize GLAD" << std::endl;
 			return -1;
 	}
-	/* LOAD GLAD */
+	/* INICIO GLAD */
 
 
-	/* CONFIGURATION FOR TEXT RENDER */
+	/* CONFIGURAÇÃO PARA RENDERIZAR TEXTO */
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
@@ -178,20 +180,20 @@ int main() {
 	if (FT_New_Face(ft, "fonts/starwarsdemolitionlevel.otf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-	// Set size to load glyphs as
+	// Define o tamanho para carregar os glyphs
 	FT_Set_Pixel_Sizes(face, 0, 48);
 
-	// Disable byte-alignment restriction
+	// Desabilita restrição de alinhamento de bytes
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	// Load first 128 characters of ASCII set
+// Carrega os primeiros 128 caracteres do conjunto ASCII
 	for (GLubyte c = 0; c < 128; c++) {
-			// Load character glyph 
+		//Carrega o caractere glyph 
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
 				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 				continue;
 		}
-		// Generate texture
+		// Gerando a textura
 		GLuint texture;
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -206,12 +208,12 @@ int main() {
 			GL_UNSIGNED_BYTE,
 			face->glyph->bitmap.buffer
 		);
-		// Set texture options
+		// Definição de opções de textura
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// Now store character for later use
+	// Agora armazena o caractere para uso posterior
 		Character character = {
 			texture,
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
@@ -221,10 +223,10 @@ int main() {
 		Characters.insert(std::pair<GLchar, Character>(c, character));
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	// Destroy FreeType once we're finished
+	// Encerrar o FreeType assim que terminar
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
-	/* CONFIGURATION FOR TEXT RENDER */
+/* CONFIGURAÇÃO PARA RENDERIZAÇÃO DO TEXTO */
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -239,7 +241,7 @@ int main() {
 	Shader TextShader("TextShader.vs", "TextShader.fs");
 	/* SHADERS */
 
-	// PROJECTION FOR TEXT RENDER
+// PROJEÇÃO PARA RENDERIZAÇÃO DO TEXTO
 		glm::mat4 Text_projection = glm::ortho(0.0f, SCREEN_WIDTH, 0.0f, SCREEN_HEIGHT);
 		TextShader.Use();
 		glUniformMatrix4fv(glGetUniformLocation(TextShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(Text_projection));
@@ -332,7 +334,7 @@ int main() {
 		 1.0f, -1.0f,  1.0f
 	};
 
-	/* SKYBOX GENERATION */
+	/* GERAÇÃO DO SKYBOX */
 	unsigned int skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
@@ -341,9 +343,9 @@ int main() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	/* SKYBOX GENERATION */
+	/* GERAÇÃO DO SKYBOX */
 
-	/* VERTEX GENERATION FOR ORBITS */
+/* GERAÇÃO DE VÉRTICES PARA ÓRBITAS */
 	std::vector<float> orbVert;
 	GLfloat xx;
 	GLfloat zz;
@@ -356,9 +358,9 @@ int main() {
 			orbVert.push_back(0.0f);
 			orbVert.push_back(zz);
 	}
-	/* VERTEX GENERATION FOR ORBITS */
+/* GERAÇÃO DE VÉRTICES PARA ÓRBITAS */
 
-	/* VAO-VBO for ORBITS*/
+	/* VAO-VBO PARA ÓRBITAS*/
 	GLuint VBO_t, VAO_t;
 	glGenVertexArrays(1, &VAO_t);
 	glGenBuffers(1, &VBO_t);
@@ -369,9 +371,9 @@ int main() {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	/* VAO-VBO for ORBITS*/
+	/* VAO-VBO PARA ÓRBITAS*/
 
-	/* TEXT RENDERING VAO-VBO*/
+	/* RENDERIZAÇÃO DO TEXTO VAO-VBO*/
 	glGenVertexArrays(1, &textVAO);
 	glGenBuffers(1, &textVBO);
 	glBindVertexArray(textVAO);
@@ -381,9 +383,9 @@ int main() {
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	/* TEXT RENDERING VAO-VBO*/
+	/* RENDERIZAÇÃO DO TEXTO VAO-VBO*/
 
-	/* LOAD TEXTURES */
+	/* CARREGANDO TEXTURAS */
 	unsigned int texturaTerra = loadTexture("resources/texturaPlanetas/terra.jpg");
 	unsigned int texturaSol = loadTexture("resources/texturaPlanetas/sol.jpg");
 	unsigned int texturaLua = loadTexture("resources/texturaPlanetas/lua.jpg");
@@ -396,9 +398,9 @@ int main() {
 	unsigned int texturaNetuno = loadTexture("resources/texturaPlanetas/netuno.jpg");
 	unsigned int texturaSaturnoAnel = loadTexture("resources/texturaPlanetas/anelSaturno.jpg");
 	unsigned int texturaTerra_clouds = loadTexture("resources/texturaPlanetas/nuvensTerra.jpg");
-	/* LOAD TEXTURES */
+	/* CARREGANDO TEXTURAS */
 
-	/* SPHERE GENERATION */
+	/* GERAÇÃO DAS ESFERAS(ASTROS) */
 	Sphere Sol(100.0f, 36 * 5, 18 * 5);
 	Sphere Mercury(10.0f, 36, 18);
 	Sphere Venus(12.0f, 36, 18);
@@ -409,7 +411,7 @@ int main() {
 	Sphere Uranus(30.0f, 36, 18);
 	Sphere Neptune(30.0f, 36, 19);
 	Sphere Moon(5.5f, 36, 18);
-	/* SPHERE GENERATION */
+	/* GERAÇÃO DAS ESFERAS(ASTROS) */
 
 	std::vector<std::string> faces {
 		"resources/skybox/starfield/starfield_rt.tga",
@@ -448,7 +450,7 @@ int main() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		/* ZOOM CONTROL */
+		/* ZOOM CONTROLES */
 		if (!camera.FreeCam)
 		{
 			if (camera.Position.y < 200 && camera.Position.y > 200.0f)
@@ -465,7 +467,7 @@ int main() {
 			if (camera.Position.y > 70.f && camera.Position.y < 125.0f)
 				camera.MovementSpeed = 200.0f;
 		}
-		/* ZOOM CONTROL */
+		/* ZOOM CONTROLES */
 
 		processInput(window); // input
 
@@ -478,7 +480,7 @@ int main() {
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-		// render
+		// renderização
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -734,7 +736,7 @@ int main() {
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		SkyboxShader.setMat4("view", view);
 		SkyboxShader.setMat4("projection", projection);
-		// skybox cube
+		// skybox cubo
 		glBindVertexArray(skyboxVAO);
 		glActiveTexture(GL_TEXTURE0);
 		if (SkyBoxExtra)
@@ -881,72 +883,88 @@ void processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 			PlanetView = 1;
-			Info.Name = "MERCURY";
-			Info.OrbitSpeed = "47,87";
-			Info.Mass = "0.32868";
-			Info.Gravity = "0.38";
+			Info.Nome = "MERCURIO";
+			Info.VelocidadeMediaOrbital = "47,4";
+			Info.TemperaturaMedia = "167";
+			Info.Massa = "0.32868";
+			Info.Gravidade = "0.38";
+			Info.QuantidadeLuas = "0";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
 			PlanetView = 2;
-			Info.Name = "VENUS";
-			Info.OrbitSpeed = "35,02";
-			Info.Mass = "0.32868";
-			Info.Gravity = "0.90";
+			Info.Nome = "VENUS";
+			Info.VelocidadeMediaOrbital = "35";
+				Info.TemperaturaMedia = "464";
+			Info.Massa = "0.32868";
+			Info.Gravidade = "0.90";
+			Info.QuantidadeLuas = "0";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
 			PlanetView = 3;
-			Info.Name = "EARTH";
-			Info.OrbitSpeed = "29,76";
-			Info.Mass = "5.97600";
-			Info.Gravity = "1";
+			Info.Nome = "TERRA";
+			Info.VelocidadeMediaOrbital = "29,8";
+			Info.TemperaturaMedia = "15";
+			Info.Massa = "5.97600";
+			Info.Gravidade = "1";
+			Info.QuantidadeLuas = "1";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
 			PlanetView = 4;
-			Info.Name = "MARS";
-			Info.OrbitSpeed = "24,13";
-			Info.Mass = "0.63345";
-			Info.Gravity = "0.38";
+			Info.Nome = "MARTE";
+			Info.VelocidadeMediaOrbital = "24,1";
+				Info.TemperaturaMedia = "-65";
+			Info.Massa = "0.63345";
+			Info.Gravidade = "0.38";
+			Info.QuantidadeLuas = "2";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
 			PlanetView = 5;
-			Info.Name = "JUPITER";
-			Info.OrbitSpeed = "13,07";
-			Info.Mass = "1876.64328";
-			Info.Gravity = "2.55";
+			Info.Nome = "JUPITER";
+			Info.VelocidadeMediaOrbital = "13,1";
+			Info.TemperaturaMedia = "-110";
+			Info.Massa = "1876.64328";
+			Info.Gravidade = "2.55";
+			Info.QuantidadeLuas = "79(53 confirmados, 26 provisórios)";
 			onFreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
 			PlanetView = 6;
-			Info.Name = "SATURN";
-			Info.OrbitSpeed = "9,67";
-			Info.Mass = "561.80376";
-			Info.Gravity = "1.12";
+			Info.Nome = "SATURNO";
+			Info.VelocidadeMediaOrbital= "9,7";
+			Info.TemperaturaMedia = "-140";
+			Info.Massa = "561.80376";
+			Info.Gravidade = "1.12";
+			Info.QuantidadeLuas = "82(53 confirmmados, 29 provisórios";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
 			PlanetView = 7;
-			Info.Name = "URANUS";
-			Info.OrbitSpeed = "6,84";
-			Info.Mass = "86.05440";
-			Info.Gravity = "0.97";
+			Info.Nome = "URANO";
+			Info.VelocidadeMediaOrbital = "6,8";
+			Info.TemperaturaMedia = "-195";
+			Info.Massa = "86.05440";
+			Info.Gravidade = "0.97";
+			Info.QuantidadeLuas = "27";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
 			PlanetView = 8;
-			Info.Name = "NEPTUNE";
-			Info.OrbitSpeed = "5,48";
-			Info.Mass = "101.59200";
-			Info.Gravity = "1.17";
+			Info.Nome = "NETUNO";
+			Info.VelocidadeMediaOrbital = "5,4";
+				Info.TemperaturaMedia = "-200";
+			Info.Massa = "101.59200";
+			Info.Gravidade = "1.17";
+			Info.QuantidadeLuas = "14";
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
@@ -1020,13 +1038,13 @@ unsigned int loadTexture(char const * path) {
 	return textureID;
 }
 void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
-	// Activate corresponding render state	
+// Ativa o estado de renderização correspondente
 	s.Use();
 	glUniform3f(glGetUniformLocation(s.ID, "textColor"), color.x, color.y, color.z);
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(textVAO);
 
-	// Iterate through all characters
+// Iterar por todos os caracteres
 	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++) {
 		Character ch = Characters[*c];
@@ -1036,7 +1054,7 @@ void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale
 
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;
-		// Update VBO for each character
+		// Update VBO para cada objeto
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
 			{ xpos,     ypos,       0.0, 1.0 },
@@ -1046,24 +1064,26 @@ void RenderText(Shader &s, std::string text, GLfloat x, GLfloat y, GLfloat scale
 			{ xpos + w, ypos,       1.0, 1.0 },
 			{ xpos + w, ypos + h,   1.0, 0.0 }
 		};
-		// Render glyph texture over quad
+		// Renderização glyph textura sobre  quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-		// Update content of VBO memory
+	// Atualiza o conteúdo de VBO memória
 		glBindBuffer(GL_ARRAY_BUFFER, textVBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		// Render quad
+		// Renderização quad
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+		// Agora avance os cursores para o próximo glifo (observe que o avanço é o número de 1/64 pixels)
+		x += (ch.Advance >> 6) * scale; // Bitshift por 6 para obter o valor em pixels (2^6 = 64)
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void ShowInfo(Shader &s) {
-	RenderText(s, "Planet: " + Info.Name, 25.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-	RenderText(s, "Avarage Orbital Speed (km/s): " + Info.OrbitSpeed, 25.0f, SCREEN_HEIGHT - 50.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-	RenderText(s, "Mass (kg * 10^24): " + Info.Mass, 25.0f, SCREEN_HEIGHT - 70.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-	RenderText(s, "Gravity (g): " + Info.Gravity, 25.0f, SCREEN_HEIGHT - 90.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+	RenderText(s, "Planeta: " + Info.Nome, 25.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+	RenderText(s, "Velocidade  media orbital (km/s): " + Info.VelocidadeMediaOrbital, 25.0f, SCREEN_HEIGHT - 50.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+	RenderText(s, "Temperatura media (ºC): " + Info.TemperaturaMedia, 25.0f, SCREEN_HEIGHT - 70.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+	RenderText(s, "Massa (kg * 10^24): " + Info.Massa, 25.0f, SCREEN_HEIGHT - 90.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+	RenderText(s, "Gravidade (g): " + Info.Gravidade, 25.0f, SCREEN_HEIGHT - 110.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+	RenderText(s, "Quantidade de Luas: " + Info.QuantidadeLuas, 25.0f, SCREEN_HEIGHT - 130.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 }

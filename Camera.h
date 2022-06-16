@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp> 
 
 
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
+// Define várias opções possíveis para o movimento da câmera. Usado como abstração para ficar longe dos métodos de entrada específicos do sistema de janelas
 enum Camera_Movement {
 	FORWARD,
 	BACKWARD,
@@ -20,7 +20,7 @@ enum Camera_Movement {
 	SCROLL_BACKWARD
 };
 
-// Default camera values
+// Valores padrão da câmera
 const GLfloat YAW = -90.0f;
 const GLfloat PITCH = 0.0f;
 const GLfloat SPEED = 400.0f;
@@ -28,27 +28,27 @@ const GLfloat SENSITIVTY = 0.1f;
 const GLfloat ZOOM = 45.0f;
 
 
-// An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
+// Uma classe de câmera abstrata que processa a entrada e calcula os Ângulos Euler, Vetores e Matrizes correspondentes para uso em OpenGL
 class Camera
 {
 public:
-	// Camera Attributes
+// Atributos da Câmera
 	glm::vec3 Position;
 	glm::vec3 Front;
 	glm::vec3 Up;
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
 	glm::vec3 LookAtPos;
-	// Eular Angles
+// Ângulos de Euler
 	GLfloat Yaw;
 	GLfloat Pitch;
-	// Camera options
+// Opções da câmera
 	GLfloat MovementSpeed;
 	GLfloat MouseSensitivity;
 	GLfloat Zoom;
 	bool FreeCam;
 
-	// Constructor with vectors
+// Construtor com vetores
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM)
 	{
 		this->Position = position;
@@ -57,7 +57,7 @@ public:
 		this->Pitch = pitch;
 		this->updateCameraVectors();
 	}
-	// Constructor with scalar values
+	// Construtor com valores escalares
 	Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM)
 	{
 		this->Position = glm::vec3(posX, posY, posZ);
@@ -67,13 +67,13 @@ public:
 		this->updateCameraVectors();
 	}
 
-	// Returns the view matrix calculated using Eular Angles and the LookAt Matrix
+// Retorna a matriz de visualização calculada usando Ângulos de Euler  e a Matriz LookAt
 	glm::mat4 GetViewMatrix()
 	{
 		return glm::lookAt(this->Position, this->Position + this->Front, this->Up);
 	}
 
-	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
+	// Processa a entrada recebida de qualquer sistema de entrada tipo teclado. Aceita parâmetro de entrada na forma de ENUM definido pela câmera (para abstraí-lo de sistemas de janelas)
 	void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
 	{
 		GLfloat velocity = this->MovementSpeed * deltaTime;
@@ -113,7 +113,7 @@ public:
 		}
 	}
 
-	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+// Processa a entrada recebida de um sistema de entrada de mouse. Espera o valor de deslocamento na direção x e y.
 	void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true)
 	{
 		xoffset *= this->MouseSensitivity;
@@ -124,7 +124,7 @@ public:
 			this->Yaw += xoffset;
 			this->Pitch += yoffset;
 
-			// Make sure that when pitch is out of bounds, screen doesn't get flipped
+			// Certifique-se de que quando o tom estiver fora dos limites, a tela não seja invertida
 			if (constrainPitch)
 			{
 				if (this->Pitch > 89.0f)
@@ -133,11 +133,11 @@ public:
 					this->Pitch = -89.0f;
 			} 
 		}
-		// Update Front, Right and Up Vectors using the updated Eular angles
+	// Atualiza os vetores Front, Right e Up usando os ângulos Euler atualizados
 		this->updateCameraVectors();
 	}
 
-	// Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
+// Processa a entrada recebida de um evento de roda de rolagem do mouse. Requer apenas entrada no eixo da roda vertical.
 	void ProcessMouseScroll(GLfloat yoffset)
 	{
 		if (this->Zoom >= 1.0f && this->Zoom <= 45.0f)
@@ -149,7 +149,7 @@ public:
 	}
 
 private:
-	// Calculates the front vector from the Camera's (updated) Eular Angles
+	// Calcula o vetor frontal dos Ângulos Euler da Câmera (atualizados)
 	void updateCameraVectors()
 	{
 		// Calculate the new Front vector
@@ -159,8 +159,8 @@ private:
 		front.z = sin(glm::radians(this->Yaw)) * cos(glm::radians(this->Pitch));
 
 		this->Front = glm::normalize(front);
-		// Also re-calculate the Right and Up vector
-		this->Right = glm::normalize(glm::cross(this->Front, this->WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+// Também recalcula o vetor Right e Up
+		this->Right = glm::normalize(glm::cross(this->Front, this->WorldUp)); // Normaliza os vetores, porque seu comprimento se aproxima de 0 quanto mais você olha para cima ou para baixo, o que resulta em um movimento mais lento.
 		this->Up = glm::normalize(glm::cross(this->Right, this->Front));
 	}
 };
