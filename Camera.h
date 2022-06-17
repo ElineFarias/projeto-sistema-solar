@@ -1,4 +1,4 @@
-#ifndef  CAMERA_H
+//#ifndef  CAMERA_H
 #define CAMERA_H
 
 // Std. Includes
@@ -9,8 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
 
-
-// Define várias opções possíveis para o movimento da câmera. Usado como abstração para ficar longe dos métodos de entrada específicos do sistema de janelas
+// Define várias opções possíveis para o movimento da câmera. 
 enum Camera_Movement {
 	FORWARD,
 	BACKWARD,
@@ -29,8 +28,7 @@ const GLfloat ZOOM = 45.0f;
 
 
 // Uma classe de câmera abstrata que processa a entrada e calcula os Ângulos Euler, Vetores e Matrizes correspondentes para uso em OpenGL
-class Camera
-{
+class Camera {
 public:
 // Atributos da Câmera
 	glm::vec3 Position;
@@ -48,18 +46,16 @@ public:
 	GLfloat Zoom;
 	bool FreeCam;
 
-// Construtor com vetores
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM)
-	{
+// Construção com vetores
+	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM) {
 		this->Position = position;
 		this->WorldUp = up;
 		this->Yaw = yaw;
 		this->Pitch = pitch;
 		this->updateCameraVectors();
 	}
-	// Construtor com valores escalares
-	Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM)
-	{
+	// Construção com valores escalares
+	Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM) {
 		this->Position = glm::vec3(posX, posY, posZ);
 		this->WorldUp = glm::vec3(upX, upY, upZ);
 		this->Yaw = yaw;
@@ -68,18 +64,15 @@ public:
 	}
 
 // Retorna a matriz de visualização calculada usando Ângulos de Euler  e a Matriz LookAt
-	glm::mat4 GetViewMatrix()
-	{
+	glm::mat4 GetViewMatrix() {
 		return glm::lookAt(this->Position, this->Position + this->Front, this->Up);
 	}
 
-	// Processa a entrada recebida de qualquer sistema de entrada tipo teclado. Aceita parâmetro de entrada na forma de ENUM definido pela câmera (para abstraí-lo de sistemas de janelas)
-	void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
-	{
+	// Processa a entrada recebida de qualquer sistema de entrada tipo teclado. Aceita parâmetro de entrada na forma de ENUM definido pela câmera
+	void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime){
 		GLfloat velocity = this->MovementSpeed * deltaTime;
 
-		if (FreeCam)
-		{
+		if (FreeCam) {
 			if (direction == FORWARD)
 				this->Position += this->Front * velocity;
 			if (direction == BACKWARD)
@@ -95,8 +88,7 @@ public:
 			if (direction == SCROLL_BACKWARD)
 				this->Position -= this->Front * (15000.0f * deltaTime); */
 		}
-		else
-		{
+		else {
 			if (direction == FORWARD)
 				this->Position += glm::vec3(0.0f, 0.0f, 1.0f) * velocity;
 			if (direction == BACKWARD)
@@ -114,19 +106,16 @@ public:
 	}
 
 // Processa a entrada recebida de um sistema de entrada de mouse. Espera o valor de deslocamento na direção x e y.
-	void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true)
-	{
+	void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrainPitch = true) {
 		xoffset *= this->MouseSensitivity;
 		yoffset *= this->MouseSensitivity;
 
-		if (FreeCam)
-		{
+		if (FreeCam) {
 			this->Yaw += xoffset;
 			this->Pitch += yoffset;
 
 			// Certifique-se de que quando o tom estiver fora dos limites, a tela não seja invertida
-			if (constrainPitch)
-			{
+			if (constrainPitch) {
 				if (this->Pitch > 89.0f)
 					this->Pitch = 89.0f;
 				if (this->Pitch < -89.0f)
@@ -138,8 +127,7 @@ public:
 	}
 
 // Processa a entrada recebida de um evento de roda de rolagem do mouse. Requer apenas entrada no eixo da roda vertical.
-	void ProcessMouseScroll(GLfloat yoffset)
-	{
+	void ProcessMouseScroll(GLfloat yoffset){
 		if (this->Zoom >= 1.0f && this->Zoom <= 45.0f)
 			this->Zoom -= yoffset;
 		if (this->Zoom <= 1.0f)
@@ -150,8 +138,7 @@ public:
 
 private:
 	// Calcula o vetor frontal dos Ângulos Euler da Câmera (atualizados)
-	void updateCameraVectors()
-	{
+	void updateCameraVectors() {
 		// Calculate the new Front vector
 		glm::vec3 front;
 		front.x = cos(glm::radians(this->Yaw)) * cos(glm::radians(this->Pitch));
@@ -165,4 +152,4 @@ private:
 	}
 };
 
-#endif // ! CAMERA_H
+//#endif // ! CAMERA_H

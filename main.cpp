@@ -8,7 +8,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H   
 #include "Shader.h"
-#include "Sphere.h"
+#include "Esfera.h"
 #include "Camera.h"
 #include <cstdlib>
 #include <iostream>
@@ -397,38 +397,38 @@ int main() {
 	unsigned int texturaUrano = loadTexture("resources/texturaPlanetas/urano.jpg");
 	unsigned int texturaNetuno = loadTexture("resources/texturaPlanetas/netuno.jpg");
 	unsigned int texturaSaturnoAnel = loadTexture("resources/texturaPlanetas/anelSaturno.jpg");
-	unsigned int texturaTerra_clouds = loadTexture("resources/texturaPlanetas/nuvensTerra.jpg");
+//	unsigned int texturaTerra_clouds = loadTexture("resources/texturaPlanetas/nuvensTerra.jpg");
 	/* CARREGANDO TEXTURAS */
 
 	/* GERAÇÃO DAS ESFERAS(ASTROS) */
-	Sphere Sol(100.0f, 36 * 5, 18 * 5);
-	Sphere Mercury(10.0f, 36, 18);
-	Sphere Venus(12.0f, 36, 18);
-	Sphere Earth(11.8f, 36, 18);
-	Sphere Mars(8.0f, 36, 18);
-	Sphere Jupiter(40.0f, 36, 18);
-	Sphere Saturn(37.0f, 36, 18);
-	Sphere Uranus(30.0f, 36, 18);
-	Sphere Neptune(30.0f, 36, 19);
-	Sphere Moon(5.5f, 36, 18);
+	Esfera Sol(100.0f, 36 * 5, 18 * 5);
+	Esfera Mercurio(10.0f, 36, 18);
+	Esfera Venus(12.0f, 36, 18);
+	Esfera Terra(11.8f, 36, 18);
+	Esfera Marte(8.0f, 36, 18);
+	Esfera Jupiter(40.0f, 36, 18);
+	Esfera Saturno(37.0f, 36, 18);
+	Esfera Urano(30.0f, 36, 18);
+	Esfera Netuno(30.0f, 36, 19);
+	Esfera Lua(5.5f, 36, 18);
 	/* GERAÇÃO DAS ESFERAS(ASTROS) */
 
-	std::vector<std::string> faces {
+	std::vector<std::string> faces_extra {
 		"resources/skybox/starfield/starfield_rt.tga",
 		"resources/skybox/starfield/starfield_lf.tga",
 		"resources/skybox/starfield/starfield_up.tga",
 		"resources/skybox/starfield/starfield_dn.tga",
 		"resources/skybox/starfield/starfield_ft.tga",
 		"resources/skybox/starfield/starfield_bk.tga",
-	};
-	std::vector<std::string> faces_extra {
-		 "resources/skybox/blue/bkg1_right.png",
-		"resources/skybox/blue/bkg1_left.png",
-		"resources/skybox/blue/bkg1_top.bmp",
-		"resources/skybox/blue/bkg1_bot.jpg",
-		"resources/skybox/blue/bkg1_front.bmp",
-		"resources/skybox/blue/bkg1_back.jpg",
 
+	};
+	std::vector<std::string> faces {
+		"resources/skybox/blue/bkg1_right.png",
+		"resources/skybox/blue/bkg1_left.png",
+		"resources/skybox/blue/bkg1_top.png",
+		"resources/skybox/blue/bkg1_bot.png",
+		"resources/skybox/blue/bkg1_front.png",
+		"resources/skybox/blue/bkg1_back.png",
 	};
 
 	unsigned int cubemapTexture = loadCubemap(faces);
@@ -525,7 +525,7 @@ int main() {
 		model_mercury = glm::rotate(model_mercury, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
 		model_mercury = glm::rotate(model_mercury, (GLfloat)glfwGetTime() * glm::radians(-90.0f) * 0.05f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_mercury);
-		Mercury.Draw();
+		Mercurio.Draw();
 		/* MERCURIO */
 
 		/* VENUS */
@@ -563,7 +563,7 @@ int main() {
 		model_earth = glm::rotate(model_earth, (GLfloat)glfwGetTime() * glm::radians(-33.25f) * 2.0f, glm::vec3(0.0f, 0.0f, 1.f));
 		camera.LookAtPos = glm::vec3(model_earth[3][0], model_earth[3][1], model_earth[3][2]);
 		SimpleShader.setMat4("model", model_earth);
-		Earth.Draw();  
+		Terra.Draw();  
 		
 		/* TERRA */
 		
@@ -581,7 +581,7 @@ int main() {
 		model_moon = glm::rotate(model_moon, glm::radians(-32.4f), glm::vec3(0.0f, 1.0f, 0.f));
 		model_moon = glm::rotate(model_moon, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 3.1f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_moon);
-		Moon.Draw();
+		Lua.Draw();
 		/* LUA */
 
 
@@ -600,7 +600,7 @@ int main() {
 		model_mars = glm::rotate(model_mars, glm::radians(-32.4f), glm::vec3(0.0f, 1.0f, 0.f));
 		model_mars = glm::rotate(model_mars, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 2.1f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_mars);
-		Mars.Draw();
+		Marte.Draw();
 		/* MARTE */
 
 		/* JUPITER */
@@ -637,7 +637,7 @@ int main() {
 		model_saturn = glm::rotate(model_saturn, glm::radians(-34.7f), glm::vec3(0.0f, 1.0f, 0.f));
 		model_saturn = glm::rotate(model_saturn, (GLfloat)glfwGetTime() * glm::radians(-34.7f) * 4.48f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_saturn);
-		Saturn.Draw();
+		Saturno.Draw();
 		/* SATURNO */
 
 		/* URANO */
@@ -655,7 +655,7 @@ int main() {
 		model_uranus = glm::rotate(model_uranus, glm::radians(-99.0f), glm::vec3(0.0f, 1.0f, 0.f));
 		model_uranus = glm::rotate(model_uranus, (GLfloat)glfwGetTime() * glm::radians(-99.0f) * 4.5f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", model_uranus);
-		Uranus.Draw();
+		Urano.Draw();
 		/* URANO */
 
 		/* NETUNO*/
@@ -675,7 +675,7 @@ int main() {
 		model_neptune = glm::rotate(model_neptune, (GLfloat)glfwGetTime() * glm::radians(-30.2f) * 4.0f, glm::vec3(0.0f, 0.0f, 1.f));
 		
 		SimpleShader.setMat4("model", model_neptune);
-		Neptune.Draw();
+		Netuno.Draw();
 		/* NETUNO */
 
 		glActiveTexture(GL_TEXTURE0);
@@ -870,7 +870,7 @@ void processInput(GLFWwindow *window)
 			camera.FreeCam = true;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {		//Esta função retorna o último estado relatado para a chave especificada para a janela especificada.
 			PlanetView = 0;
 			onFreeCam = true;
 			camera.FreeCam = false;
@@ -881,7 +881,7 @@ void processInput(GLFWwindow *window)
 			camera.ProcessMouseMovement(xoff,yoff);
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {			
 			PlanetView = 1;
 			Info.Nome = "MERCURIO";
 			Info.VelocidadeMediaOrbital = "47,4";
@@ -957,7 +957,7 @@ void processInput(GLFWwindow *window)
 			onFreeCam = false;
 			camera.FreeCam = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) { 		
 			PlanetView = 8;
 			Info.Nome = "NETUNO";
 			Info.VelocidadeMediaOrbital = "5,4";
