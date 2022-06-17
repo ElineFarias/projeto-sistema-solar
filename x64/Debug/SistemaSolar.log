@@ -1,25 +1,8 @@
-﻿  glad.c
-  main.cpp
+﻿  main.cpp
   The contents of <filesystem> are available only with C++17 or later.
 C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(42,23): warning C4244: '=': conversão de 'LONG' para 'float', possível perda de dados
 C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(43,21): warning C4244: '=': conversão de 'LONG' para 'float', possível perda de dados
 C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(151,54): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
 C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(151,40): warning C4244: 'argumento': conversão de 'float' para 'int', possível perda de dados
 C:\Users\eline\Desktop\ProjetoSistemaSolar\main.cpp(221,24): warning C4838: a conversão de 'FT_Pos' em 'GLuint' requer uma conversão de restrição
-  stb_image.cpp
-  Gerando Código...
-glfw3.lib(context.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(context.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(init.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(init.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(input.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(input.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(monitor.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(monitor.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(vulkan.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(vulkan.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(window.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(window.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(win32_init.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(win32_init.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(win32_joystick.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(win32_monitor.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(win32_time.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(win32_time.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(win32_tls.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(win32_tls.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(win32_window.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(wgl_context.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(wgl_context.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
-glfw3.lib(egl_context.obj) : warning LNK4099: PDB 'glfw.pdb' não foi encontrado 'glfw3.lib(egl_context.obj)' ou no 'C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\glfw.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
   SistemaSolar.vcxproj -> C:\Users\eline\Desktop\ProjetoSistemaSolar\x64\Debug\SistemaSolar.exe

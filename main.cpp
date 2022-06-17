@@ -128,7 +128,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 		}
 }
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-		if (onFreeCam && !camera.FreeCam) {
+		if (onFreeCam) {
 			if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 				onRotate = true;
 			else onRotate = false;
@@ -440,7 +440,6 @@ int main() {
 	camera.Yaw = 90.0f;
 	camera.Pitch = -40.0f;
 	camera.ProcessMouseMovement(xoff, yoff);
-	camera.FreeCam = false;
 	onFreeCam = true;
 	glm::mat4 view;
 	glm::vec3 PlanetsPositions[9];
@@ -451,7 +450,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		/* ZOOM CONTROLES */
-		if (!camera.FreeCam)
+		if ( !onFreeCam)
 		{
 			if (camera.Position.y < 200 && camera.Position.y > 200.0f)
 				camera.MovementSpeed = 300.0f;
@@ -476,7 +475,7 @@ int main() {
 			SceneRotateY = 0.0f;
 			SceneRotateX = 0.0f;
 		}
-		if (camera.FreeCam || PlanetView > 0)
+		if (onFreeCam || PlanetView > 0)
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -568,19 +567,19 @@ int main() {
 		/* TERRA */
 		
 		/* LUA */
-		glm::mat4 model_moon;
+		glm::mat4 model_lua;
 		xx = sin(glfwGetTime() * PlanetSpeed * 67.55f) * 100.0f * 0.5f *1.3f;
 		zz = cos(glfwGetTime() * PlanetSpeed * 67.55f) * 100.0f * 0.5f *1.3f;
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texturaLua);
-		model_moon = glm::rotate(model_moon, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
-		model_moon = glm::rotate(model_moon, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
-		model_moon = glm::translate(model_moon, EarthPoint);
-		model_moon = glm::translate(model_moon, glm::vec3(xx, 0.0f, zz));
-		model_moon = glm::rotate(model_moon, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
-		model_moon = glm::rotate(model_moon, glm::radians(-32.4f), glm::vec3(0.0f, 1.0f, 0.f));
-		model_moon = glm::rotate(model_moon, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 3.1f, glm::vec3(0.0f, 0.0f, 1.f));
-		SimpleShader.setMat4("model", model_moon);
+		model_lua = glm::rotate(model_lua, glm::radians(SceneRotateY), glm::vec3(1.0f, 0.0f, 0.0f));
+		model_lua = glm::rotate(model_lua, glm::radians(SceneRotateX), glm::vec3(0.0f, 0.0f, 1.0f));
+		model_lua = glm::translate(model_lua, EarthPoint);
+		model_lua = glm::translate(model_lua, glm::vec3(xx, 0.0f, zz));
+		model_lua = glm::rotate(model_lua, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
+		model_lua = glm::rotate(model_lua, glm::radians(-32.4f), glm::vec3(0.0f, 1.0f, 0.f));
+		model_lua = glm::rotate(model_lua, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 3.1f, glm::vec3(0.0f, 0.0f, 1.f));
+		SimpleShader.setMat4("model", model_lua);
 		Lua.Draw();
 		/* LUA */
 
@@ -683,7 +682,7 @@ int main() {
 
 		/* ORBITA */
 		glBindVertexArray(VAO_t);
-		glLineWidth(1.0f);
+		glLineWidth(0.7f);
 		glm::mat4 modelorb;
 		for (float i = 2; i < 10; i++) {
 			modelorb = glm::mat4(1);
@@ -749,8 +748,7 @@ int main() {
 		/* DESENHO SKYBOX */
 
 		/*RASTREAMENTO DO PLANETA + MOSTRAR INFORMAÇÕES DO PLANETA*/
-		switch (PlanetView)
-		{
+		switch (PlanetView) {
 		case 1:
 			viewX = sin(glfwGetTime() * PlanetSpeed) * 100.0f *3.5f * 1.3f;
 			viewZ = cos(glfwGetTime() * PlanetSpeed) * 100.0f *3.5f * 1.3f;
@@ -823,15 +821,13 @@ int main() {
 			RenderText(TextShader, "PLANETAS: 8 ", 25.0f, SCREEN_HEIGHT - 80.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 			RenderText(TextShader, "SATELITES NATURAIS: 428 ", 25.0f, SCREEN_HEIGHT - 105.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 			RenderText(TextShader, "COMETAS: 4584 (Em 2021) ", 25.0f, SCREEN_HEIGHT - 130.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-
-			if (camera.FreeCam)
-				RenderText(TextShader, "CAMERA  01 ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
-			if (onFreeCam)
-				RenderText(TextShader, "CAMERA 02 (ESTATICA) ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+		
+		if (onFreeCam)
+				RenderText(TextShader, "CAMERA  ESTATICA ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 			break;
 		}
 		if (PlanetView > 0)
-			RenderText(TextShader, "CAMERAS PLANETAS ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
+			RenderText(TextShader, "CAMERA  PLANETAS ", SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 30.0f, 0.35f, glm::vec3(0.7f, 0.7f, 0.11f));
 		/* RASTREAMENTO DO PLANETA + MOSTRAR INFORMAÇÕES DO PLANETA*/
 
 
@@ -847,8 +843,7 @@ int main() {
 	return 0;
 }
 
-void processInput(GLFWwindow *window)
-{
+void processInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
@@ -866,14 +861,12 @@ void processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) {
 			PlanetView = 0;
-			onFreeCam = false;
-			camera.FreeCam = true;
+			onFreeCam = true;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {		//Esta função retorna o último estado relatado para a chave especificada para a janela especificada.
 			PlanetView = 0;
 			onFreeCam = true;
-			camera.FreeCam = false;
 			camera.Position = glm::vec3(0.0f, 250.0f, -450.0f);
 			camera.Yaw = 90.0f;
 			camera.Pitch = -40.0f;
@@ -890,18 +883,16 @@ void processInput(GLFWwindow *window)
 			Info.Gravidade = "0.38";
 			Info.QuantidadeLuas = "0";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
 			PlanetView = 2;
 			Info.Nome = "VENUS";
 			Info.VelocidadeMediaOrbital = "35";
-				Info.TemperaturaMedia = "464";
+			Info.TemperaturaMedia = "464";
 			Info.Massa = "0.32868";
 			Info.Gravidade = "0.90";
 			Info.QuantidadeLuas = "0";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
 			PlanetView = 3;
@@ -912,7 +903,6 @@ void processInput(GLFWwindow *window)
 			Info.Gravidade = "1";
 			Info.QuantidadeLuas = "1";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
 			PlanetView = 4;
@@ -923,7 +913,6 @@ void processInput(GLFWwindow *window)
 			Info.Gravidade = "0.38";
 			Info.QuantidadeLuas = "2";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
 			PlanetView = 5;
@@ -944,7 +933,6 @@ void processInput(GLFWwindow *window)
 			Info.Gravidade = "1.12";
 			Info.QuantidadeLuas = "82(53 confirmmados, 29 provisórios";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
 			PlanetView = 7;
@@ -955,7 +943,6 @@ void processInput(GLFWwindow *window)
 			Info.Gravidade = "0.97";
 			Info.QuantidadeLuas = "27";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) { 		
 			PlanetView = 8;
@@ -966,7 +953,6 @@ void processInput(GLFWwindow *window)
 			Info.Gravidade = "1.17";
 			Info.QuantidadeLuas = "14";
 			onFreeCam = false;
-			camera.FreeCam = false;
 	}
 
 } 
