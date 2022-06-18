@@ -4,7 +4,7 @@
 
 **Discentes:** Maria Eline - Maria Gabriele - Mariana Teixeira - Maxela Martins - Najala Kelly Lima - Nicole Fernandes.
 
-![SistemaSolarFinal](C:\Users\eline\Desktop\ProjetoSistemaSolar\SistemaSolarFinal.png)
+![Imagem do Sistema Solar](SistemaSolarFinal.png)
 
 **Bibliotecas  e APIs Utilizadas:**
 * [OpenGL](https://www.opengl.org/) -  API de gráficos 3D.
@@ -25,15 +25,16 @@ Profile: Core.
 </p>
 
 **Comandos:**
- *      Scroll do Mouse ou movimento de "pinça no touchpad"  - Aplica zoom na cena.
-*       Teclas 1 a 8 - Seleciona os planetas na ordem Mercúrio, Vênus, Terra, Marte, Saturno, Urano e Netuno respectivamente.
-*       Teclas W,S,A e D - Movimenta a câmera no Modo Estático.
+ * Scroll do Mouse ou movimento de "pinça no touchpad"  - Aplica zoom na cena.
+ * Teclas 1 a 8 - Seleciona os planetas na ordem Mercúrio, Vênus, Terra, Marte, Saturno, Urano e Netuno respectivamente.
+ * Teclas W,S,A e D - Movimenta a câmera no Modo Estático.
 
 **Link para o repositório do projeto no Github:** https://github.com/ElineFarias/ProjetoSistemaSolar.git
 
 **Link do video de Demonstração:**
 
 **Referências:**
+
   *https://www.solarsystemscope.com/textures/
   *https://www.glfw.org/documentation.html
   *https://glm.g-truc.net/0.9.5/api/a00176.html
