@@ -397,7 +397,7 @@ int main() {
 	unsigned int texturaUrano = loadTexture("resources/texturaPlanetas/urano.jpg");
 	unsigned int texturaNetuno = loadTexture("resources/texturaPlanetas/netuno.jpg");
 	unsigned int texturaSaturnoAnel = loadTexture("resources/texturaPlanetas/anelSaturno.png");
-unsigned int texturaLinhasElipses = loadTexture("resources/texturaPlanetas/linhasElipses.jpg");
+	unsigned int texturaLinhasElipses = loadTexture("resources/texturaPlanetas/linhasElipses.jpg");
 	/* CARREGANDO TEXTURAS */
 
 	/* GERAÇÃO DAS ESFERAS(ASTROS) */
