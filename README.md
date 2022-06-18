@@ -17,7 +17,7 @@ Profile: Core.
 **Recursos Implementados:**
   <p>      O projeto foi desenvolvido utilizando o Visual Studio 2019. Na pasta principal existe uma arquivo executável sistemaSolar.exe, que foi gerado para computadores com suporte a SO de x64. A linguagem escolhida para o desenvolvimento do projeto foi C++.</p>
  <p>       Sol, Lua e Planetas - Sistema com Objeto no centro e os outros orbitando ao seu redor.
- <p>      Câmeras -  Duas câmeras foram implementadas, a primeira que inicia com o projeto é a câmera estática e a segunda é executada ao se selecionar um planeta(Câmera Planetas) onde também aparece algumas informações sobre o planeta selecionado. Para volta para a primeira câmera utiliza-se a tecla space.
+ <p>       Câmeras -  Duas câmeras foram implementadas, a primeira que inicia com o projeto é a câmera estática e a segunda é executada ao se selecionar um planeta(Câmera Planetas) onde também aparece algumas informações sobre o planeta selecionado. Para volta para a primeira câmera utiliza-se a tecla space.
         </p>
    <p>      Skybox - Utilizada na criação do plano de fundo, para conseguir um efeito de profundidade na cena.
         </p>
@@ -31,7 +31,7 @@ Profile: Core.
 
 **Link para o repositório do projeto no Github:** https://github.com/ElineFarias/ProjetoSistemaSolar.git
 
-**Link do video de Demonstração:**
+**Link do video de Demonstração:** https://youtu.be/0eiLlNwEeRA
 
 **Referências:**
 
