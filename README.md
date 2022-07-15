@@ -49,3 +49,5 @@ Profile: Core.
   *http://douc54.cs.edinboro.edu/~bennett/class/csci360/fall2016/notes/gl/two.html
   *https://www.geertarien.com/blog/2017/07/30/breakdown-of-the-lookAt-function-in-OpenGL/
 
+
+<h3> DIFICULDADES ENCONTRADAS PELA EQUIPE</h3>
