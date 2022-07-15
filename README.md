@@ -51,3 +51,8 @@ Profile: Core.
 
 
 <h3> DIFICULDADES ENCONTRADAS PELA EQUIPE</h3>
+Uma das dificuldades encontradas foi conseguir compilar o código e não aparecer o sistema ao fundo, como abaixo : <br>
+![Erro 01](https://user-images.githubusercontent.com/88677900/179316854-502414ee-cf47-4802-9cfb-a3a0a9efae2c.jpeg)
+<br>
+No código abaixo, foram feita as alterações para a iluminação, o código executou mas apareceu o problema, foi tentado de várias formas contornar o problema, mas não obtive sucesso: <br>
+![Codigo_Iluminacao](https://user-images.githubusercontent.com/88677900/179316927-21b17518-18b5-4f76-b693-9e14899aafc3.jpeg)
