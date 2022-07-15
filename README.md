@@ -51,3 +51,4 @@ Profile: Core.
 
 
 <h3> DIFICULDADES ENCONTRADAS PELA EQUIPE</h3>
+  * Dificuldade encontrada no uso do Shader para a implementação da iluminação, quando é feita a manipulação da luz difusa, ambiente e especular, a luz da cena fica totalmente preta e mesmo fazendo alterações nos parâmetros de cada luz a cena continua preta.
