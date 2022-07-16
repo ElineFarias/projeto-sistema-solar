@@ -71,4 +71,5 @@ Profile: Core.
   * Com o uso do visual Studio como ferramenta de desenvolvimento, agora nessa segunda etapa do trabalho ocorreu problemas ao carregar a cena, pois ao aplicar a luz, os planetas desapareciam da cena, porém depois percebeu-se que não era problema na ferramenta, pois ao executar o arquivo executável que era criado na compilação e debugação do projeto, os planetas carregavam.
   * Algumas immagens de teste estão na pasta imagensTestes do repositório que foi criado para essa segunda parte.
   <img src="https://github.com/ElineFarias/ProjetoSistemaSolarLuz/blob/7895d6c16a55af9f7b9e0acaf6ff5e191d76ea67/imagensTestes/TESTE.png" alt="My cool logo"/>
+  <img src= "https://github.com/ElineFarias/ProjetoSistemaSolarLuz/blob/c81e082af8b07f3e8711da7535cd70e4d57611e6/imagensTestes/sistemaluz.png">
   
