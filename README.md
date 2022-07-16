@@ -56,6 +56,7 @@ Profile: Core.
 
 
 <h3> DIFICULDADES ENCONTRADAS PELA EQUIPE</h3>
+
   * Uma das principais dificuldades encontradas pela equipe foram as manipulações das bibliotecas do OpenGL, por ser um ambiente de computação gráfica pesado, isso dificultou o desenvolvimento da aplicação. 
   
   * Além disso, outras dificuldades também encontradas foram em relação a continuidade do desenvolvimento em termos de iluminação, todos os membros da equipe tiveram dificuldades, pois no decorrer do desenvolvimento do código, vários bugs foram surgindo à medida que evoluímos.
