@@ -35,7 +35,9 @@ Profile: Core.
  * Teclas W,S,A e D - Movimenta a câmera no Modo Estático.
 
 **Link para o repositório do projeto no Github:** https://github.com/ElineFarias/ProjetoSistemaSolar.git
+<p>
 **Link para o repositório do projeto no Github com a tentativa de implementação do Shader de Luz:**https://github.com/ElineFarias/ProjetoSistemaSolarLuz.git
+  </p>
 
 **Link do video de Demonstração:** https://youtu.be/0eiLlNwEeRA
 
