@@ -69,5 +69,6 @@ Profile: Core.
   * Dificuldade encontrada no uso do Shader para a implementação da iluminação, quando é feita a manipulação da luz difusa, ambiente e especular, a luz da cena fica totalmente preta e mesmo fazendo alterações nos parâmetros de cada luz a cena continua preta.
   * Como se optou trabalhar através de shaders, ao tentar implementar a luz não consegui-se realizar a mistura da luz com a textura. 
   * Com o uso do visual Studio como ferramenta de desenvolvimento, agora nessa segunda etapa do trabalho ocorreu problemas ao carregar a cena, pois ao aplicar a luz, os planetas desapareciam da cena, porém depois percebeu-se que não era problema na ferramenta, pois ao executar o arquivo executável que era criado na compilação e debugação do projeto, os planetas carregavam.
-  
+  * Algumas immagens de teste estão na pasta imagensTestes do repositório que foi criado para essa segunda parte.
+  <img src="https://github.com/ElineFarias/ProjetoSistemaSolarLuz/blob/7895d6c16a55af9f7b9e0acaf6ff5e191d76ea67/imagensTestes/TESTE.png" alt="My cool logo"/>
   
