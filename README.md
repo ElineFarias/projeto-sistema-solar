@@ -35,6 +35,7 @@ Profile: Core.
  * Teclas W,S,A e D - Movimenta a câmera no Modo Estático.
 
 **Link para o repositório do projeto no Github:** https://github.com/ElineFarias/ProjetoSistemaSolar.git
+**Link para o repositório do projeto no Github com a tentativa de implementação do Shader de Luz:**https://github.com/ElineFarias/ProjetoSistemaSolarLuz.git
 
 **Link do video de Demonstração:** https://youtu.be/0eiLlNwEeRA
 
@@ -64,5 +65,7 @@ Profile: Core.
   * Dificuldade de execução do programa pelo Sistema Operacional Linux, uma vez que, o Visual Studio é uma ferramenta da Microsoft e não abrange outros Sistemas Operacionais além de Windows e Mac. 
   
   * Dificuldade encontrada no uso do Shader para a implementação da iluminação, quando é feita a manipulação da luz difusa, ambiente e especular, a luz da cena fica totalmente preta e mesmo fazendo alterações nos parâmetros de cada luz a cena continua preta.
+  * Como se optou trabalhar através de shaders, ao tentar implementar a luz não consegui-se realizar a mistura da luz com a textura. 
+  * Com o uso do visual Studio como ferramenta de desenvolvimento, agora nessa segunda etapa do trabalho ocorreu problemas ao carregar a cena, pois ao aplicar a luz, os planetas desapareciam da cena, porém depois percebeu-se que não era problema na ferramenta, pois ao executar o arquivo executável que era criado na compilação e debugação do projeto, os planetas carregavam.
   
   
