@@ -2,12 +2,12 @@
 
 **Docente:** Iális Cavalcante.
 
-**Discentes:** Maria Eline - 
-               Maria Gabriele - 
-               Mariana Teixeira - 
-               Maxela Martins - 
-               Najala Kelly Lima - 
-               Nicole Fernandes - 
+**Discentes:** Maria Eline - \\
+               Maria Gabriele - \\
+               Mariana Teixeira - \\
+               Maxela Martins - \\
+               Najala Kelly Lima - \\
+               Nicole Fernandes.\\
 
 ![Imagem do Sistema Solar](SistemaSolarFinal.png)
 
