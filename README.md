@@ -51,4 +51,5 @@ Profile: Core.
 
 
 <h3> DIFICULDADES ENCONTRADAS PELA EQUIPE</h3>
+  * Dificuldade de execução do programa pelo Sistema Operacional Linux, uma vez que, o Visual Studio é uma ferramenta da Microsoft e não abrange outros Sistemas Operacionais além de Windows e Mac. 
   * Dificuldade encontrada no uso do Shader para a implementação da iluminação, quando é feita a manipulação da luz difusa, ambiente e especular, a luz da cena fica totalmente preta e mesmo fazendo alterações nos parâmetros de cada luz a cena continua preta.
