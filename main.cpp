@@ -239,6 +239,8 @@ int main() {
 	Shader SkyboxShader("skybox.vs", "skybox.fs");
 	Shader texShader("simpleVS.vs", "texFS.fs");
 	Shader TextShader("TextShader.vs", "TextShader.fs");
+	Shader cor_shader("resources/Shaders/model_loading.vert", "resources/Shaders/color.frag");
+  Shader light_shader("resources/Shaders/lightSun.vert", "resources/Shaders/lightSun.frag");
 	/* SHADERS */
 
 // PROJEÇÃO PARA RENDERIZAÇÃO DO TEXTO
@@ -509,6 +511,10 @@ int main() {
 		SimpleShader.setMat4("model", modelo_sol);
 		Sol.Draw();
 		/* SOL */
+		 light_shader.Use();
+		 
+        light_shader.setMat4("projection", projection);
+        light_shader.setMat4("view", view);
 
 		/* MERCURIO */
 		glm::mat4 modelo_mercurio;
@@ -524,6 +530,7 @@ int main() {
 		modelo_mercurio = glm::rotate(modelo_mercurio, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
 		modelo_mercurio = glm::rotate(modelo_mercurio, (GLfloat)glfwGetTime() * glm::radians(-90.0f) * 0.05f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_mercurio);
+		light_shader.setMat4("model", modelo_mercurio);
 		Mercurio.Draw();
 		/* MERCURIO */
 
@@ -542,6 +549,7 @@ int main() {
 		modelo_venus = glm::rotate(modelo_venus, glm::radians(-132.5f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_venus = glm::rotate(modelo_venus, (GLfloat)glfwGetTime() * glm::radians(-132.5f) * 0.012f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_venus);
+		light_shader.setMat4("model", modelo_venus);
 		Venus.Draw();
 		/* VENUS */
 
@@ -562,6 +570,7 @@ int main() {
 		modelo_terra = glm::rotate(modelo_terra, (GLfloat)glfwGetTime() * glm::radians(-33.25f) * 2.0f, glm::vec3(0.0f, 0.0f, 1.f));
 		camera.LookAtPos = glm::vec3(modelo_terra[3][0], modelo_terra[3][1], modelo_terra[3][2]);
 		SimpleShader.setMat4("model", modelo_terra);
+		light_shader.setMat4("model", modelo_terra);
 		Terra.Draw();  
 		
 		/* TERRA */
@@ -580,6 +589,7 @@ int main() {
 		modelo_lua = glm::rotate(modelo_lua, glm::radians(-32.4f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_lua = glm::rotate(modelo_lua, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 3.1f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_lua);
+		light_shader.setMat4("model", modelo_lua);
 		Lua.Draw();
 		/* LUA */
 
@@ -599,6 +609,7 @@ int main() {
 		modelo_marte = glm::rotate(modelo_marte, glm::radians(-32.4f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_marte = glm::rotate(modelo_marte, (GLfloat)glfwGetTime() * glm::radians(-32.4f) * 2.1f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_marte);
+		light_shader.setMat4("model", modelo_marte);
 		Marte.Draw();
 		/* MARTE */
 
@@ -617,6 +628,7 @@ int main() {
 		modelo_jupiter = glm::rotate(modelo_jupiter, glm::radians(-23.5f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_jupiter = glm::rotate(modelo_jupiter, (GLfloat)glfwGetTime() * glm::radians(-23.5f) * 4.5f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_jupiter);
+		light_shader.setMat4("model", modelo_jupiter);
 		Jupiter.Draw();
 		/* JUPITER */
 
@@ -636,6 +648,7 @@ int main() {
 		modelo_saturno = glm::rotate(modelo_saturno, glm::radians(-34.7f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_saturno = glm::rotate(modelo_saturno, (GLfloat)glfwGetTime() * glm::radians(-34.7f) * 4.48f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_saturno);
+		light_shader.setMat4("model", modelo_saturno);
 		Saturno.Draw();
 		/* SATURNO */
 
@@ -654,6 +667,7 @@ int main() {
 		modelo_urano = glm::rotate(modelo_urano, glm::radians(-99.0f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_urano = glm::rotate(modelo_urano, (GLfloat)glfwGetTime() * glm::radians(-99.0f) * 4.5f, glm::vec3(0.0f, 0.0f, 1.f));
 		SimpleShader.setMat4("model", modelo_urano);
+		light_shader.setMat4("model", modelo_urano);
 		Urano.Draw();
 		/* URANO */
 
@@ -672,8 +686,8 @@ int main() {
 		modelo_netuno = glm::rotate(modelo_netuno, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.f));
 		modelo_netuno = glm::rotate(modelo_netuno, glm::radians(-30.2f), glm::vec3(0.0f, 1.0f, 0.f));
 		modelo_netuno = glm::rotate(modelo_netuno, (GLfloat)glfwGetTime() * glm::radians(-30.2f) * 4.0f, glm::vec3(0.0f, 0.0f, 1.f));
-		
 		SimpleShader.setMat4("model", modelo_netuno);
+		light_shader.setMat4("model", modelo_netuno);
 		Netuno.Draw();
 		/* NETUNO */
 	// Textura das elipses
